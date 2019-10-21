@@ -1,4 +1,7 @@
-package memory;
+package handlers;
+
+import memory.SSCollection;
+import memory.SortedSegment;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +23,10 @@ public class IncomingBatchHandler {
             keyValues.put(key, value);
         }
         if (isFull()) {
+            SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(keyValues));
+            ssCollection.addSegment(lastCompleteSegment);
+            keyValues.clear();
+        } else {
             SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(keyValues));
             ssCollection.addSegment(lastCompleteSegment);
             keyValues.clear();

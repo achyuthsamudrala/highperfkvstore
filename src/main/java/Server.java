@@ -1,4 +1,4 @@
-import memory.IncomingBatchHandler;
+import handlers.IncomingBatchHandler;
 import requests.KeyValuePair;
 import memory.SSCollection;
 import requests.IncomingRequest;
@@ -55,7 +55,7 @@ public class Server {
         @Override
         public void run() {
             try {
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                //PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 InputStream in = clientSocket.getInputStream();
                 byte[] rawBytes = in.readAllBytes();
 
@@ -71,7 +71,7 @@ public class Server {
                 }
 
                 in.close();
-                out.close();
+                //out.close();
                 clientSocket.close();
 
             } catch (IOException e) {

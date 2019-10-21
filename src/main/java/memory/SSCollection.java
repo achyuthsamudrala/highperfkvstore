@@ -9,7 +9,7 @@ public class SSCollection {
     private final List<SortedSegment> sortedSegments;
 
     public SSCollection() {
-        sortedSegments = new ArrayList<SortedSegment>();
+        sortedSegments = new ArrayList<>();
     }
 
     public byte[] get(byte[] key) {

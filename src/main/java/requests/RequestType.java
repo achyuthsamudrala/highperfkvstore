@@ -1,6 +1,6 @@
 package requests;
 
-public enum  RequestType {
+public enum RequestType {
     SET,
     GET,
     SNAPSHOT
