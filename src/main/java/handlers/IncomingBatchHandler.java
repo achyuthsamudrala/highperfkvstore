@@ -6,7 +6,7 @@ import memory.SortedSegment;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class IncomingBatchHandler {
+public class IncomingBatchHandler implements RequestHandler {
 
     private static final int CAPACITY = 10000; /* This is the maximum size of each individual segment in memory */
 
@@ -18,6 +18,12 @@ public class IncomingBatchHandler {
         this.ssCollection = ssCollection;
     }
 
+    @Override
+    public byte[] get(byte[] key) {
+        return null; //TODO
+    }
+
+    @Override
     public void set(byte[] key, byte[] value) {
         if (hasCapacity()) {
             keyValues.put(key, value);
@@ -27,6 +33,11 @@ public class IncomingBatchHandler {
             createNewSortedSegment();
             keyValues.put(key, value);
         }
+    }
+
+    @Override
+    public SSCollection getSnapshot() {
+        return null; //TODO
     }
 
     private void createNewSortedSegment() {
@@ -48,7 +59,7 @@ public class IncomingBatchHandler {
     }
 
     private SortedSegment convertToSortedSegment(Map<byte[], byte[]> keyValues) {
-        /* Add logic to convert into sorted segment*/
+        /* TODO Add logic to convert into sorted segment*/
         return new SortedSegment(keyValues);
     }
 }

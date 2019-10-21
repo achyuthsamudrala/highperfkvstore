@@ -41,7 +41,7 @@ public class Server {
         }
     }
 
-    private static class ClientHandler extends Thread {
+    private class ClientHandler extends Thread {
         private Socket clientSocket;
         private final IncomingBatchHandler incomingBatchHandler;
 
@@ -62,10 +62,10 @@ public class Server {
                 IncomingRequest incomingRequest = SerializationUtils.deserialize(rawBytes);
 
                 if (incomingRequest.getRequestType().equals(RequestType.SET.toString())) {
-
+                    LOGGER.info("Received get request");
                     KeyValuePair keyValuePair = SerializationUtils.deserialize(incomingRequest.getPayload());
                     incomingBatchHandler.set(keyValuePair.getKey(), keyValuePair.getValue());
-
+                    LOGGER.info("Adding key value to store");
                 } else if (incomingRequest.getRequestType().equals(RequestType.GET.toString())) {
                     //
                 }
