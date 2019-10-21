@@ -1,14 +1,14 @@
+import handlers.ClientHandler;
 import handlers.IncomingBatchHandler;
-import requests.KeyValuePair;
+import handlers.RequestHandler;
 import memory.SSCollection;
-import requests.IncomingRequest;
-import org.apache.commons.lang3.SerializationUtils;
+
 import org.apache.log4j.Logger;
-import requests.RequestType;
+
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
+
 
 public class Server {
 
@@ -17,18 +17,18 @@ public class Server {
 
     private ServerSocket serverSocket;
     private final SSCollection ssCollection;
-    private final IncomingBatchHandler incomingBatchHandler;
+    private final RequestHandler requestHandler;
 
     Server() {
         ssCollection = new SSCollection();
-        incomingBatchHandler = new IncomingBatchHandler(ssCollection);
+        requestHandler = new IncomingBatchHandler(ssCollection);
     }
 
     void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
         LOGGER.info("Starting Server Socket at port " + PORT);
         while (true)
-            new ClientHandler(serverSocket.accept(), incomingBatchHandler).start();
+            new ClientHandler(serverSocket.accept(), requestHandler).start();
     }
 
     void stop() {
@@ -37,45 +37,6 @@ public class Server {
                 serverSocket.close();
             } catch (IOException e) {
                 LOGGER.error("Error encountered while trying to stop the server", e);
-            }
-        }
-    }
-
-    private class ClientHandler extends Thread {
-        private Socket clientSocket;
-        private final IncomingBatchHandler incomingBatchHandler;
-
-
-        ClientHandler(Socket socket, IncomingBatchHandler incomingBatchHandler) {
-            this.clientSocket = socket;
-            this.incomingBatchHandler = incomingBatchHandler;
-            LOGGER.info("Starting new Client Handler");
-        }
-
-        @Override
-        public void run() {
-            try {
-                //PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                InputStream in = clientSocket.getInputStream();
-                byte[] rawBytes = in.readAllBytes();
-
-                IncomingRequest incomingRequest = SerializationUtils.deserialize(rawBytes);
-
-                if (incomingRequest.getRequestType().equals(RequestType.SET.toString())) {
-                    LOGGER.info("Received get request");
-                    KeyValuePair keyValuePair = SerializationUtils.deserialize(incomingRequest.getPayload());
-                    incomingBatchHandler.set(keyValuePair.getKey(), keyValuePair.getValue());
-                    LOGGER.info("Adding key value to store");
-                } else if (incomingRequest.getRequestType().equals(RequestType.GET.toString())) {
-                    //
-                }
-
-                in.close();
-                //out.close();
-                clientSocket.close();
-
-            } catch (IOException e) {
-                LOGGER.error("Encountered IO Exception", e);
             }
         }
     }
