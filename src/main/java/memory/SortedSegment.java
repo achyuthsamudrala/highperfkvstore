@@ -36,9 +36,5 @@ public class SortedSegment {
         public Object next() {
             return null;
         }
-
-        public void remove() {
-
-        }
     }
 }

@@ -33,9 +33,5 @@ public class SSCollection {
         public Object next() {
             return null;
         }
-
-        public void remove() {
-
-        }
     }
 }
