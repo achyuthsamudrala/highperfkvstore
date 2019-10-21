@@ -1,6 +1,7 @@
 package memory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class SSCollection {
@@ -17,5 +18,24 @@ public class SSCollection {
 
     public boolean addSegment(SortedSegment sortedSegment) {
         return sortedSegments.add(sortedSegment);
+    }
+
+    public Iterator iterator() {
+        return new SSCollectionIterator();
+    }
+
+    private class SSCollectionIterator implements Iterator {
+
+        public boolean hasNext() {
+            return false;
+        }
+
+        public Object next() {
+            return null;
+        }
+
+        public void remove() {
+
+        }
     }
 }
