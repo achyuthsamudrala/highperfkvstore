@@ -1,5 +1,5 @@
 import handlers.ClientHandler;
-import handlers.IncomingBatchHandler;
+import handlers.BatchingRequestHandler;
 import handlers.RequestHandler;
 import memory.SSCollection;
 
@@ -21,7 +21,7 @@ public class Server {
 
     Server() {
         ssCollection = new SSCollection();
-        requestHandler = new IncomingBatchHandler(ssCollection);
+        requestHandler = new BatchingRequestHandler(ssCollection);
     }
 
     void start() throws IOException {

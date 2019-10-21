@@ -6,14 +6,14 @@ import memory.SortedSegment;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class IncomingBatchHandler implements RequestHandler {
+public class BatchingRequestHandler implements RequestHandler {
 
     private static final int CAPACITY = 10000; /* This is the maximum size of each individual segment in memory */
 
     private final Map<byte[], byte[]> keyValues;
     private final SSCollection ssCollection;
 
-    public IncomingBatchHandler(SSCollection ssCollection) {
+    public BatchingRequestHandler(SSCollection ssCollection) {
         this.keyValues = new ConcurrentHashMap<>(CAPACITY);
         this.ssCollection = ssCollection;
     }
