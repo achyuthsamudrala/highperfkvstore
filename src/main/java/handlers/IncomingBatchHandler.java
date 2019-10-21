@@ -21,17 +21,18 @@ public class IncomingBatchHandler {
     public void set(byte[] key, byte[] value) {
         if (hasCapacity()) {
             keyValues.put(key, value);
-        }
-        if (isFull()) {
-            SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(keyValues));
-            ssCollection.addSegment(lastCompleteSegment);
-            keyValues.clear();
+            if (isFull())
+                createNewSortedSegment();
         } else {
-            SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(keyValues));
-            ssCollection.addSegment(lastCompleteSegment);
-            keyValues.clear();
+            createNewSortedSegment();
             keyValues.put(key, value);
         }
+    }
+
+    private void createNewSortedSegment() {
+        SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(keyValues));
+        ssCollection.addSegment(lastCompleteSegment);
+        keyValues.clear();
     }
 
     private boolean isFull() {
