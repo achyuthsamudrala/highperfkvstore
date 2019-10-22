@@ -20,7 +20,9 @@ public class BatchingRequestHandler implements RequestHandler {
 
     @Override
     public byte[] get(byte[] key) {
-        return null; //TODO
+        if (currentActiveBatch.containsKey(key))
+            return currentActiveBatch.get(key);
+        else return ssCollection.get(key);
     }
 
     @Override
