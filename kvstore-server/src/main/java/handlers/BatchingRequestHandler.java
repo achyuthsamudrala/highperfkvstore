@@ -8,14 +8,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BatchingRequestHandler implements RequestHandler {
 
-    private static final int CAPACITY = 10000; /* This is the maximum size of each individual segment in memory */
 
     private final Map<byte[], byte[]> currentActiveBatch;
     private final SSCollection ssCollection;
+    private final int batchSize; /* This is the maximum size of each individual segment in memory */
 
-    public BatchingRequestHandler(SSCollection ssCollection) {
-        this.currentActiveBatch = new ConcurrentHashMap<>(CAPACITY);
+    public BatchingRequestHandler(SSCollection ssCollection, int batchSize) {
+        this.currentActiveBatch = new ConcurrentHashMap<>(batchSize);
         this.ssCollection = ssCollection;
+        this.batchSize = batchSize;
     }
 
     @Override
@@ -49,14 +50,14 @@ public class BatchingRequestHandler implements RequestHandler {
     }
 
     private boolean isFull() {
-        return currentActiveBatch.size() == CAPACITY;
+        return currentActiveBatch.size() == batchSize;
     }
 
     private boolean hasCapacity() {
-        return currentActiveBatch.size() < CAPACITY;
+        return currentActiveBatch.size() < batchSize;
     }
 
-    public Map<byte[], byte[]> getCurrentActiveBatch() {
+    Map<byte[], byte[]> getCurrentActiveBatch() {
         return currentActiveBatch;
     }
 

@@ -14,6 +14,7 @@ public class Server {
 
     private static final Logger LOGGER = Logger.getLogger(Server.class);
     private static final int PORT = 6666;
+    private static final int BATCH_SIZE = 10000;
 
     private ServerSocket serverSocket;
     private final SSCollection ssCollection;
@@ -21,7 +22,7 @@ public class Server {
 
     Server() {
         ssCollection = new SSCollection();
-        requestHandler = new BatchingRequestHandler(ssCollection);
+        requestHandler = new BatchingRequestHandler(ssCollection, BATCH_SIZE);
     }
 
     void start() throws IOException {

@@ -34,4 +34,8 @@ public class SSCollection {
             return null;
         }
     }
+
+    public int size() {
+        return sortedSegments.size();
+    }
 }
