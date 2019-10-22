@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class KeyValuePair implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private final byte[] key;
     private final byte[] value;
 

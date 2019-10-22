@@ -1,6 +1,10 @@
 package requests;
 
-public abstract class IncomingRequest {
+import java.io.Serializable;
+
+public class IncomingRequest implements Serializable {
+
+    private static final long serialVersionUID = 3846195790307310909L;
 
     private final String requestType;
     private final byte[] payload;

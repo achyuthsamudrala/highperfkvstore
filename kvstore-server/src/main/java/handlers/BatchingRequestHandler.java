@@ -10,11 +10,11 @@ public class BatchingRequestHandler implements RequestHandler {
 
     private static final int CAPACITY = 10000; /* This is the maximum size of each individual segment in memory */
 
-    private final Map<byte[], byte[]> keyValues;
+    private final Map<byte[], byte[]> currentActiveBatch;
     private final SSCollection ssCollection;
 
     public BatchingRequestHandler(SSCollection ssCollection) {
-        this.keyValues = new ConcurrentHashMap<>(CAPACITY);
+        this.currentActiveBatch = new ConcurrentHashMap<>(CAPACITY);
         this.ssCollection = ssCollection;
     }
 
@@ -26,12 +26,12 @@ public class BatchingRequestHandler implements RequestHandler {
     @Override
     public void set(byte[] key, byte[] value) {
         if (hasCapacity()) {
-            keyValues.put(key, value);
+            currentActiveBatch.put(key, value);
             if (isFull())
                 createNewSortedSegment();
         } else {
             createNewSortedSegment();
-            keyValues.put(key, value);
+            currentActiveBatch.put(key, value);
         }
     }
 
@@ -41,21 +41,21 @@ public class BatchingRequestHandler implements RequestHandler {
     }
 
     private void createNewSortedSegment() {
-        SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(keyValues));
+        SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(currentActiveBatch));
         ssCollection.addSegment(lastCompleteSegment);
-        keyValues.clear();
+        currentActiveBatch.clear();
     }
 
     private boolean isFull() {
-        return keyValues.size() == CAPACITY;
+        return currentActiveBatch.size() == CAPACITY;
     }
 
     private boolean hasCapacity() {
-        return keyValues.size() < CAPACITY;
+        return currentActiveBatch.size() < CAPACITY;
     }
 
     public Map<byte[], byte[]> getCurrentActiveBatch() {
-        return keyValues;
+        return currentActiveBatch;
     }
 
     private SortedSegment convertToSortedSegment(Map<byte[], byte[]> keyValues) {

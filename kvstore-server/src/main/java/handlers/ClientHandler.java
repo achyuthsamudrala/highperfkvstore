@@ -29,6 +29,7 @@ public class ClientHandler extends Thread {
             InputStream in = clientSocket.getInputStream();
             byte[] rawBytes = in.readAllBytes();
 
+
             IncomingRequest incomingRequest = SerializationUtils.deserialize(rawBytes);
 
             switch (incomingRequest.getRequestType()) {

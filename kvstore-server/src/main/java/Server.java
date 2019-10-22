@@ -34,6 +34,7 @@ public class Server {
     void stop() {
         if (serverSocket != null) {
             try {
+                LOGGER.info("Stopping KV Store server");
                 serverSocket.close();
             } catch (IOException e) {
                 LOGGER.error("Error encountered while trying to stop the server", e);
