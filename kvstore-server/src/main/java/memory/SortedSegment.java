@@ -37,4 +37,8 @@ public class SortedSegment {
             return null;
         }
     }
+
+    boolean containKey(byte[] key) {
+        return false;
+    }
 }
