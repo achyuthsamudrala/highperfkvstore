@@ -15,7 +15,7 @@ public class SSCollection {
     public byte[] get(byte[] key) {
         for (int i=size()-1;i>=0;i--) {
             SortedSegment currentSegment = sortedSegments.get(i);
-            if(currentSegment.containKey(key))
+            if(currentSegment.containsKey(key))
                 return currentSegment.get(key);
         }
         return null;
