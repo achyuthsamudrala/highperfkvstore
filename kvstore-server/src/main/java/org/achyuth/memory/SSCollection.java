@@ -1,15 +1,14 @@
 package org.achyuth.memory;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SSCollection {
 
-    private static int SEGMENT_COUNTER=1;
+    private static AtomicInteger SEGMENT_COUNTER= new AtomicInteger(1);
     private final List<SortedSegment> sortedSegments;
 
     public SSCollection() {
@@ -31,12 +30,8 @@ public class SSCollection {
 
     /* Multiple threads could be writing to this at the same time */
     public synchronized boolean addSegment(Map<byte[], byte[]> keyValues) {
-        incrementSegmentCounter();
-        return sortedSegments.add(new SortedSegment(keyValues, SEGMENT_COUNTER));
-    }
-
-    private void incrementSegmentCounter() {
-        SEGMENT_COUNTER = SEGMENT_COUNTER + 1;
+        int increasedSegmentCounter = SEGMENT_COUNTER.addAndGet(1);
+        return sortedSegments.add(new SortedSegment(keyValues, increasedSegmentCounter));
     }
 
     public Iterator iterator() {
