@@ -39,7 +39,9 @@ public class Server {
 
     void persistSSCollection() {
         FsWriter fsWriter = FsWriterFactory.getWriter("local");
-        fsWriter.write(ssCollection);
+        if (fsWriter != null)
+            fsWriter.write(ssCollection);
+        else LOGGER.error("FsWriter is NULL");
     }
 
     void stop() {

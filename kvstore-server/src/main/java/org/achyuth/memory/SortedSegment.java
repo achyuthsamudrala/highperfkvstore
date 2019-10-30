@@ -6,9 +6,11 @@ import java.util.*;
 
 public class SortedSegment {
 
+    private final int uniqueId;
     private final List<Pair<byte[], byte[]>> keyValues;
 
-    public SortedSegment(final Map<byte[], byte[]> inputMap) {
+    public SortedSegment(final Map<byte[], byte[]> inputMap, int uniqueId) {
+        this.uniqueId = uniqueId;
         final Map<byte[], byte[]> sortedMap = new TreeMap<>(inputMap);
         keyValues = new ArrayList<>();
         for (Map.Entry<byte[], byte[]> entry: sortedMap.entrySet()) {
@@ -47,5 +49,8 @@ public class SortedSegment {
         return null;
     }
 
+    public int getUniqueId() {
+        return uniqueId;
+    }
 }
 

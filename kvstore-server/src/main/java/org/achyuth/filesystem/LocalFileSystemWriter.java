@@ -1,9 +1,11 @@
 package org.achyuth.filesystem;
 
 import org.achyuth.memory.SSCollection;
+import org.achyuth.memory.SortedSegment;
 import org.apache.log4j.Logger;
 
 import java.time.Duration;
+import java.util.Iterator;
 import java.util.concurrent.*;
 
 public class LocalFileSystemWriter implements FsWriter {
@@ -27,6 +29,7 @@ public class LocalFileSystemWriter implements FsWriter {
 
     private class FilesystemPersister implements Runnable {
         private final SSCollection ssCollection;
+        private int lastPersisted;
 
         FilesystemPersister(SSCollection ssCollection) {
             this.ssCollection = ssCollection;
@@ -34,8 +37,19 @@ public class LocalFileSystemWriter implements FsWriter {
         @Override
         public void run() {
             SSCollection ssCollectionCopy = ssCollection.shallowCopy();
+            Iterator iterator = ssCollectionCopy.iterator();
+            while (iterator.hasNext()) { // TODO : Directly seek to the lastPersisted element.
+                SortedSegment current = (SortedSegment) iterator.next();
+                if (current.getUniqueId() > lastPersisted) {
+                    persist(current);
+                    lastPersisted = current.getUniqueId();
+                }
+            }
             LOGGER.info("Persisting SSCollection to Disk");
         }
     }
 
+    void persist(SortedSegment sortedSegment) {
+        //TODO : persist
+    }
 }

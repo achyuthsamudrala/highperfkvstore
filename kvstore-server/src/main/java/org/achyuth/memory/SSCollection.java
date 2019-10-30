@@ -5,9 +5,11 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class SSCollection {
 
+    private static int SEGMENT_COUNTER=1;
     private final List<SortedSegment> sortedSegments;
 
     public SSCollection() {
@@ -28,23 +30,17 @@ public class SSCollection {
     }
 
     /* Multiple threads could be writing to this at the same time */
-    public synchronized boolean addSegment(SortedSegment sortedSegment) {
-        return sortedSegments.add(sortedSegment);
+    public synchronized boolean addSegment(Map<byte[], byte[]> keyValues) {
+        incrementSegmentCounter();
+        return sortedSegments.add(new SortedSegment(keyValues, SEGMENT_COUNTER));
+    }
+
+    private void incrementSegmentCounter() {
+        SEGMENT_COUNTER = SEGMENT_COUNTER + 1;
     }
 
     public Iterator iterator() {
-        return new SSCollectionIterator();
-    }
-
-    private class SSCollectionIterator implements Iterator {
-
-        public boolean hasNext() {
-            return false;
-        }
-
-        public Pair<byte[], byte[]> next() {
-            return null;
-        }
+        return sortedSegments.iterator();
     }
 
     public SSCollection shallowCopy() {

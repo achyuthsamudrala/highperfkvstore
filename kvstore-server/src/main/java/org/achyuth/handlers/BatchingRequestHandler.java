@@ -1,7 +1,6 @@
 package org.achyuth.handlers;
 
 import org.achyuth.memory.SSCollection;
-import org.achyuth.memory.SortedSegment;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,8 +42,8 @@ public class BatchingRequestHandler implements RequestHandler {
         return null; //TODO
     }
 
-    private void createNewSortedSegment() {
-        SortedSegment lastCompleteSegment = convertToSortedSegment(Map.copyOf(currentActiveBatch));
+    private synchronized void createNewSortedSegment() {
+        Map<byte[], byte[]> lastCompleteSegment = Map.copyOf(currentActiveBatch);
         ssCollection.addSegment(lastCompleteSegment);
         currentActiveBatch.clear();
     }
@@ -59,10 +58,5 @@ public class BatchingRequestHandler implements RequestHandler {
 
     Map<byte[], byte[]> getCurrentActiveBatch() {
         return currentActiveBatch;
-    }
-
-    private SortedSegment convertToSortedSegment(Map<byte[], byte[]> keyValues) {
-        /* TODO Add logic to convert into sorted segment*/
-        return new SortedSegment(keyValues);
     }
 }
