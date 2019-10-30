@@ -1,6 +1,7 @@
 package org.achyuth.handlers;
 
 import org.achyuth.memory.SSCollection;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
@@ -9,7 +10,7 @@ import java.nio.ByteBuffer;
 public class BatchingRequestHandlerTest {
 
     @Test
-    public void testSingleSetAndGet() {
+    public void testSingleSetAndGet() throws Exception {
         SSCollection ssCollection = new SSCollection();
         BatchingRequestHandler batchingRequestHandler = new BatchingRequestHandler(ssCollection, 10000);
 
@@ -17,32 +18,33 @@ public class BatchingRequestHandlerTest {
         double expectedValue = 2.34;
 
         byte[] key = expectedKey.getBytes();
+        String hexRepKey = Hex.encodeHexString(key);
         byte[] value = toByteArray(expectedValue);
-        batchingRequestHandler.set(key, value);
+        String hexRepValue = Hex.encodeHexString(value);
 
-        byte[] valueReceived = batchingRequestHandler.get(key);
-        Assertions.assertEquals(value, valueReceived);
+        batchingRequestHandler.set(hexRepKey, hexRepValue);
 
-        double deserializedValue = toDouble(valueReceived);
-        Assertions.assertEquals(expectedValue, deserializedValue);
+        String valueReceived = batchingRequestHandler.get(hexRepKey);
+        Assertions.assertEquals(hexRepValue, valueReceived);
+
     }
 
     @Test
-    public void testCreationOfNewSegment() {
+    public void testCreationOfNewSegment() throws Exception {
         int batchSize = 10;
         SSCollection ssCollection = new SSCollection();
         BatchingRequestHandler batchingRequestHandler = new BatchingRequestHandler(ssCollection, batchSize);
 
         String expectedKey = "basekey";
         double expectedValue = 2.34;
-        byte[] value = toByteArray(expectedValue);
 
         Assertions.assertEquals(0, ssCollection.size());
 
         for (int i=0;i<batchSize;i++) {
             String transformedKey = expectedKey + i;
-            byte[] key = transformedKey.getBytes();
-            batchingRequestHandler.set(key, value);
+            String hexRepKey = Hex.encodeHexString(transformedKey.getBytes());
+            String hexRepvalue = Hex.encodeHexString(toByteArray(expectedValue));
+            batchingRequestHandler.set(hexRepKey, hexRepvalue);
             Assertions.assertEquals((i+1)%10, batchingRequestHandler.getCurrentActiveBatch().size());
         }
         Assertions.assertEquals(1, ssCollection.size());

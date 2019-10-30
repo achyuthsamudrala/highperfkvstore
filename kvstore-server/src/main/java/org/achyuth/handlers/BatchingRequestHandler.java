@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BatchingRequestHandler implements RequestHandler {
 
 
-    private final Map<byte[], byte[]> currentActiveBatch;
+    private final Map<String, String> currentActiveBatch;
     private final SSCollection ssCollection;
     private final int batchSize; /* This is the maximum size of each individual segment in org.achyuth.memory */
 
@@ -19,14 +19,14 @@ public class BatchingRequestHandler implements RequestHandler {
     }
 
     @Override
-    public byte[] get(byte[] key) throws Exception {
+    public String get(String key) throws Exception {
         if (currentActiveBatch.containsKey(key))
             return currentActiveBatch.get(key);
         else return ssCollection.get(key);
     }
 
     @Override
-    public void set(byte[] key, byte[] value) throws Exception {
+    public void set(String key, String value) throws Exception {
         if (hasCapacity()) {
             currentActiveBatch.put(key, value);
             if (isFull())
@@ -43,7 +43,7 @@ public class BatchingRequestHandler implements RequestHandler {
     }
 
     private synchronized void createNewSortedSegment() throws Exception {
-        Map<byte[], byte[]> lastCompleteSegment = Map.copyOf(currentActiveBatch);
+        Map<String, String> lastCompleteSegment = Map.copyOf(currentActiveBatch);
         ssCollection.addSegment(lastCompleteSegment);
         currentActiveBatch.clear();
     }
@@ -56,7 +56,7 @@ public class BatchingRequestHandler implements RequestHandler {
         return currentActiveBatch.size() < batchSize;
     }
 
-    Map<byte[], byte[]> getCurrentActiveBatch() {
+    Map<String, String> getCurrentActiveBatch() {
         return currentActiveBatch;
     }
 }

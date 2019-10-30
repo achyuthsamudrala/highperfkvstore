@@ -27,7 +27,7 @@ public class SSCollection {
         this.sortedSegments = sortedSegments;
     }
 
-    public byte[] get(byte[] key) {
+    public String get(String key) {
         for (int i=size()-1;i>=0;i--) {
             SortedSegment currentSegment = sortedSegments.get(i);
             if(currentSegment.containsKey(key))
@@ -37,7 +37,7 @@ public class SSCollection {
     }
 
     /* Multiple threads could be writing to this at the same time */
-    public synchronized boolean addSegment(Map<byte[], byte[]> keyValues) throws Exception {
+    public synchronized boolean addSegment(Map<String, String> keyValues) throws Exception {
         if (sortedSegments.size() >= CAPACITY) {
             persistWhenFull();
             sortedSegments.clear();

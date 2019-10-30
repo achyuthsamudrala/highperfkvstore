@@ -1,24 +1,23 @@
 package org.achyuth.memory;
 
-import org.achyuth.common.ByteArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 
 public class SortedSegment {
 
     private final int uniqueId;
-    private final List<Pair<byte[], byte[]>> keyValues;
+    private final List<Pair<String, String>> keyValues;
 
-    public SortedSegment(final Map<byte[], byte[]> inputMap, int uniqueId) {
+    public SortedSegment(final Map<String, String> inputMap, int uniqueId) {
         this.uniqueId = uniqueId;
-        final Map<byte[], byte[]> sortedMap = new TreeMap<>(inputMap);
+        final Map<String, String> sortedMap = new TreeMap<>(inputMap);
         keyValues = new ArrayList<>();
-        for (Map.Entry<byte[], byte[]> entry: sortedMap.entrySet()) {
+        for (Map.Entry<String, String> entry: sortedMap.entrySet()) {
             keyValues.add(Pair.of(entry.getKey(), entry.getValue()));
         }
     }
 
-    byte[] get(byte[] key) {
+    String get(String key) {
         return binarySearch(key);
     }
 
@@ -26,18 +25,18 @@ public class SortedSegment {
         return keyValues.iterator();
     }
 
-    boolean containsKey(byte[] key) {
+    boolean containsKey(String key) {
         return binarySearch(key) != null;
     }
 
-    private byte[] binarySearch(byte[] key) {
+    private String binarySearch(String key) {
         int low = 0;
         int high = keyValues.size()-1;
 
         while (low <= high) {
             final int mid = (low + high) >>> 1;
-            final byte[] midVal = keyValues.get(mid).getKey();
-            final int cmp = ByteArrayUtils.compareByteArrays(midVal, key);
+            final String midVal = keyValues.get(mid).getKey();
+            final int cmp = midVal.compareTo(key);
 
             if (cmp < 0)
                 low = mid + 1;

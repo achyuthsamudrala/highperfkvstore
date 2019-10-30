@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import org.apache.commons.codec.binary.Hex;
 
 
 public class ClientHandler extends Thread {
@@ -38,7 +39,9 @@ public class ClientHandler extends Thread {
                     LOGGER.info("Received set request");
                     SetRequest setRequest = SerializationUtils.deserialize(incomingRequest.getPayload());
                     try {
-                        handler.set(setRequest.getKey(), setRequest.getValue());
+                        String keyInHex = Hex.encodeHexString(setRequest.getKey());
+                        String keyInValue = Hex.encodeHexString(setRequest.getValue());
+                        handler.set(keyInHex, keyInValue);
                         out.write("Added key value pair");
                     } catch (Exception e) {
                         LOGGER.error("Unable to make a set request", e);
@@ -49,8 +52,9 @@ public class ClientHandler extends Thread {
                     LOGGER.info("Received get request");
                     GetRequest getRequest = SerializationUtils.deserialize(incomingRequest.getPayload());
                     try {
-                        byte[] value = handler.get(getRequest.getKey());
-                        out.write(new String(value)); //Send back output in string
+                        String keyInHex = Hex.encodeHexString(getRequest.getKey());
+                        String value = handler.get(keyInHex);
+                        out.write(value); //Send back output in string
                     } catch (Exception e) {
                         LOGGER.error("Unable to make a get request", e);
                         out.write("Unable to make a get request");
