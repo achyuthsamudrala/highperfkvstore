@@ -1,6 +1,6 @@
-package handlers;
+package org.achyuth.handlers;
 
-import memory.SSCollection;
+import org.achyuth.memory.SSCollection;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 

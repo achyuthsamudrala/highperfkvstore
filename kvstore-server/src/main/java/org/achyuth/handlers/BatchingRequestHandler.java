@@ -1,7 +1,7 @@
-package handlers;
+package org.achyuth.handlers;
 
-import memory.SSCollection;
-import memory.SortedSegment;
+import org.achyuth.memory.SSCollection;
+import org.achyuth.memory.SortedSegment;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +11,7 @@ public class BatchingRequestHandler implements RequestHandler {
 
     private final Map<byte[], byte[]> currentActiveBatch;
     private final SSCollection ssCollection;
-    private final int batchSize; /* This is the maximum size of each individual segment in memory */
+    private final int batchSize; /* This is the maximum size of each individual segment in org.achyuth.memory */
 
     public BatchingRequestHandler(SSCollection ssCollection, int batchSize) {
         this.currentActiveBatch = new ConcurrentHashMap<>(batchSize);

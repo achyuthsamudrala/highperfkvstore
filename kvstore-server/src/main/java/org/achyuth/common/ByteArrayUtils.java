@@ -1,4 +1,4 @@
-package common;
+package org.achyuth.common;
 
 public class ByteArrayUtils {
 

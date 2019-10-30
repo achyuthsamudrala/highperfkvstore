@@ -1,7 +1,11 @@
-import handlers.ClientHandler;
-import handlers.BatchingRequestHandler;
-import handlers.RequestHandler;
-import memory.SSCollection;
+package org.achyuth;
+
+import org.achyuth.filesystem.FsWriter;
+import org.achyuth.filesystem.FsWriterFactory;
+import org.achyuth.handlers.ClientHandler;
+import org.achyuth.handlers.BatchingRequestHandler;
+import org.achyuth.handlers.RequestHandler;
+import org.achyuth.memory.SSCollection;
 
 import org.apache.log4j.Logger;
 
@@ -27,9 +31,15 @@ public class Server {
 
     void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
-        LOGGER.info("Starting Server Socket at port " + PORT);
+        LOGGER.info("Starting org.achyuth.Server Socket at port " + PORT);
+        persistSSCollection();
         while (true)
             new ClientHandler(serverSocket.accept(), requestHandler).start();
+    }
+
+    void persistSSCollection() {
+        FsWriter fsWriter = FsWriterFactory.getWriter("local");
+        fsWriter.write(ssCollection);
     }
 
     void stop() {

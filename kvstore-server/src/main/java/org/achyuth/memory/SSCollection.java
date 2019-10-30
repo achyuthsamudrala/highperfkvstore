@@ -1,4 +1,6 @@
-package memory;
+package org.achyuth.memory;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,6 +12,10 @@ public class SSCollection {
 
     public SSCollection() {
         sortedSegments = new ArrayList<>();
+    }
+
+    private SSCollection(List<SortedSegment> sortedSegments) {
+        this.sortedSegments = sortedSegments;
     }
 
     public byte[] get(byte[] key) {
@@ -36,9 +42,13 @@ public class SSCollection {
             return false;
         }
 
-        public Object next() {
+        public Pair<byte[], byte[]> next() {
             return null;
         }
+    }
+
+    public SSCollection shallowCopy() {
+        return new SSCollection(sortedSegments);
     }
 
     public int size() {

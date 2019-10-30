@@ -1,4 +1,4 @@
-package requests;
+package org.achyuth.requests;
 
 import java.io.Serializable;
 

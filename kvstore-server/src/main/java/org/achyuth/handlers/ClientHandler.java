@@ -1,10 +1,10 @@
-package handlers;
+package org.achyuth.handlers;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.log4j.Logger;
-import requests.GetRequest;
-import requests.IncomingRequest;
-import requests.SetRequest;
+import org.achyuth.requests.GetRequest;
+import org.achyuth.requests.IncomingRequest;
+import org.achyuth.requests.SetRequest;
 
 import java.io.IOException;
 import java.io.InputStream;

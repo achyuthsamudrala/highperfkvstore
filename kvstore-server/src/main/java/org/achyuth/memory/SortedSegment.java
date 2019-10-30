@@ -1,6 +1,6 @@
-package memory;
+package org.achyuth.memory;
 
-import common.ByteArrayUtils;
+import org.achyuth.common.ByteArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 

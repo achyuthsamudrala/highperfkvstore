@@ -1,4 +1,4 @@
-package memory;
+package org.achyuth.memory;
 
 import org.junit.Test;
 
