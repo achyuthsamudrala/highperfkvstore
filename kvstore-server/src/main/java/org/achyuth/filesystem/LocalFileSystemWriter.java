@@ -36,8 +36,7 @@ public class LocalFileSystemWriter implements FsWriter {
         }
         @Override
         public void run() {
-            SSCollection ssCollectionCopy = ssCollection.shallowCopy();
-            Iterator iterator = ssCollectionCopy.iterator();
+            Iterator iterator = ssCollection.iterator();
             while (iterator.hasNext()) { // TODO : Directly seek to the lastPersisted element.
                 SortedSegment current = (SortedSegment) iterator.next();
                 if (current.getUniqueId() > lastPersisted) {

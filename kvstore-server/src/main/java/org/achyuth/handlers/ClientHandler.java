@@ -37,14 +37,24 @@ public class ClientHandler extends Thread {
                 case "SET":
                     LOGGER.info("Received set request");
                     SetRequest setRequest = SerializationUtils.deserialize(incomingRequest.getPayload());
-                    handler.set(setRequest.getKey(), setRequest.getValue());
-                    out.write("Added key value pair");
+                    try {
+                        handler.set(setRequest.getKey(), setRequest.getValue());
+                        out.write("Added key value pair");
+                    } catch (Exception e) {
+                        LOGGER.error("Unable to make a set request", e);
+                        out.write("Unable to make a set request");
+                    }
                     break;
                 case "GET":
                     LOGGER.info("Received get request");
                     GetRequest getRequest = SerializationUtils.deserialize(incomingRequest.getPayload());
-                    byte[] value = handler.get(getRequest.getKey());
-                    out.write(new String(value)); //Send back output in string
+                    try {
+                        byte[] value = handler.get(getRequest.getKey());
+                        out.write(new String(value)); //Send back output in string
+                    } catch (Exception e) {
+                        LOGGER.error("Unable to make a get request", e);
+                        out.write("Unable to make a get request");
+                    }
                     break;
                 default:
             }

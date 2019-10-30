@@ -1,7 +1,5 @@
 package org.achyuth;
 
-import org.achyuth.filesystem.FsWriter;
-import org.achyuth.filesystem.FsWriterFactory;
 import org.achyuth.handlers.ClientHandler;
 import org.achyuth.handlers.BatchingRequestHandler;
 import org.achyuth.handlers.RequestHandler;
@@ -32,16 +30,8 @@ public class Server {
     void start() throws IOException {
         serverSocket = new ServerSocket(PORT);
         LOGGER.info("Starting org.achyuth.Server Socket at port " + PORT);
-        persistSSCollection();
         while (true)
             new ClientHandler(serverSocket.accept(), requestHandler).start();
-    }
-
-    void persistSSCollection() {
-        FsWriter fsWriter = FsWriterFactory.getWriter("local");
-        if (fsWriter != null)
-            fsWriter.write(ssCollection);
-        else LOGGER.error("FsWriter is NULL");
     }
 
     void stop() {

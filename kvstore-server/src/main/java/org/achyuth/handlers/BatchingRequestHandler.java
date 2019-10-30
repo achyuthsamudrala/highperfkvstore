@@ -19,14 +19,14 @@ public class BatchingRequestHandler implements RequestHandler {
     }
 
     @Override
-    public byte[] get(byte[] key) {
+    public byte[] get(byte[] key) throws Exception {
         if (currentActiveBatch.containsKey(key))
             return currentActiveBatch.get(key);
         else return ssCollection.get(key);
     }
 
     @Override
-    public void set(byte[] key, byte[] value) {
+    public void set(byte[] key, byte[] value) throws Exception {
         if (hasCapacity()) {
             currentActiveBatch.put(key, value);
             if (isFull())
@@ -42,7 +42,7 @@ public class BatchingRequestHandler implements RequestHandler {
         return null; //TODO
     }
 
-    private synchronized void createNewSortedSegment() {
+    private synchronized void createNewSortedSegment() throws Exception {
         Map<byte[], byte[]> lastCompleteSegment = Map.copyOf(currentActiveBatch);
         ssCollection.addSegment(lastCompleteSegment);
         currentActiveBatch.clear();
