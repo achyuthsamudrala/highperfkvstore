@@ -1,5 +1,6 @@
 package org.achyuth.handlers;
 
+import org.achyuth.exceptions.KeyNotFoundException;
 import org.achyuth.memory.SSCollection;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class BatchingRequestHandler implements RequestHandler {
     }
 
     @Override
-    public String get(String key) throws Exception {
+    public String get(String key) throws KeyNotFoundException {
         if (currentActiveBatch.containsKey(key))
             return currentActiveBatch.get(key);
         else return ssCollection.get(key);

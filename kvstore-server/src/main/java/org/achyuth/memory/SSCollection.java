@@ -1,6 +1,7 @@
 package org.achyuth.memory;
 
 import org.achyuth.exceptions.FsWriterUnavailableException;
+import org.achyuth.exceptions.KeyNotFoundException;
 import org.achyuth.filesystem.FsWriter;
 import org.achyuth.filesystem.FsWriterFactory;
 import org.apache.log4j.Logger;
@@ -27,13 +28,13 @@ public class SSCollection {
         this.sortedSegments = sortedSegments;
     }
 
-    public String get(String key) {
+    public String get(String key) throws KeyNotFoundException {
         for (int i=size()-1;i>=0;i--) {
             SortedSegment currentSegment = sortedSegments.get(i);
             if(currentSegment.containsKey(key))
                 return currentSegment.get(key);
         }
-        return null;
+        throw new KeyNotFoundException("Key not found in collection");
     }
 
     /* Multiple threads could be writing to this at the same time */
