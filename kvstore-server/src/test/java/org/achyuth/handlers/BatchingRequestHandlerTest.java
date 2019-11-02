@@ -1,6 +1,8 @@
 package org.achyuth.handlers;
 
-import org.achyuth.memory.SSCollection;
+import org.achyuth.filesystem.CommitLogHandler;
+import org.achyuth.filesystem.StoredDataHandlerImpl;
+import org.achyuth.memory.MemoryCollection;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -11,8 +13,9 @@ public class BatchingRequestHandlerTest {
 
     @Test
     public void testSingleSetAndGet() throws Exception {
-        SSCollection ssCollection = new SSCollection();
-        BatchingRequestHandler batchingRequestHandler = new BatchingRequestHandler(ssCollection, 10000);
+        MemoryCollection ssCollection = new MemoryCollection(10000);
+        RequestHandlerImpl batchingRequestHandler = new RequestHandlerImpl(ssCollection,
+                                                    new MockCommitLogHandlerImpl(), new StoredDataHandlerImpl(null));
 
         String expectedKey = "somekey";
         double expectedValue = 2.34;
@@ -29,26 +32,11 @@ public class BatchingRequestHandlerTest {
 
     }
 
-    @Test
-    public void testCreationOfNewSegment() throws Exception {
-        int batchSize = 10;
-        SSCollection ssCollection = new SSCollection();
-        BatchingRequestHandler batchingRequestHandler = new BatchingRequestHandler(ssCollection, batchSize);
-
-        String expectedKey = "basekey";
-        double expectedValue = 2.34;
-
-        Assertions.assertEquals(0, ssCollection.size());
-
-        for (int i=0;i<batchSize;i++) {
-            String transformedKey = expectedKey + i;
-            String hexRepKey = Hex.encodeHexString(transformedKey.getBytes());
-            String hexRepvalue = Hex.encodeHexString(toByteArray(expectedValue));
-            batchingRequestHandler.set(hexRepKey, hexRepvalue);
-            Assertions.assertEquals((i+1)%10, batchingRequestHandler.getCurrentActiveBatch().size());
+    private class MockCommitLogHandlerImpl implements CommitLogHandler {
+        @Override
+        public boolean append(String key, String value) {
+            return true;
         }
-        Assertions.assertEquals(1, ssCollection.size());
-        Assertions.assertEquals(0, batchingRequestHandler.getCurrentActiveBatch().size());
     }
 
     private static byte[] toByteArray(double value) {

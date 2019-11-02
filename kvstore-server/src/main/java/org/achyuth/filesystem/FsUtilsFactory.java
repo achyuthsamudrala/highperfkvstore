@@ -1,10 +1,10 @@
 package org.achyuth.filesystem;
 
-public class FsWriterFactory {
+public class FsUtilsFactory {
 
-    public static FsWriter getWriter(String name) {
+    public static FsUtils getWriter(String name) {
         if (name.equals("local")) {
-            return new LocalFileSystemWriter();
+            return new LocalFileSystemUtils();
         }
         // TODO: Other file system implementations
 

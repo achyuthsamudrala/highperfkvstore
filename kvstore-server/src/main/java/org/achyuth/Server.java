@@ -1,9 +1,10 @@
 package org.achyuth;
 
+import org.achyuth.filesystem.*;
 import org.achyuth.handlers.ClientHandler;
-import org.achyuth.handlers.BatchingRequestHandler;
+import org.achyuth.handlers.RequestHandlerImpl;
 import org.achyuth.handlers.RequestHandler;
-import org.achyuth.memory.SSCollection;
+import org.achyuth.memory.MemoryCollection;
 
 import org.apache.log4j.Logger;
 
@@ -19,12 +20,15 @@ public class Server {
     private static final int BATCH_SIZE = 10000;
 
     private ServerSocket serverSocket;
-    private final SSCollection ssCollection;
+    private final MemoryCollection ssCollection;
     private final RequestHandler requestHandler;
 
     Server() {
-        ssCollection = new SSCollection();
-        requestHandler = new BatchingRequestHandler(ssCollection, BATCH_SIZE);
+        ssCollection = new MemoryCollection(BATCH_SIZE);
+         ;
+        CommitLogHandler commitLogHandler = new CommitLogHandlerImpl(FsUtilsFactory.getWriter("local"));
+        StoredDataHandler storedDataHandler = new StoredDataHandlerImpl(FsUtilsFactory.getWriter("local"));
+        requestHandler = new RequestHandlerImpl(ssCollection, commitLogHandler, storedDataHandler);
     }
 
     void start() throws IOException {
