@@ -1,6 +1,5 @@
 package org.achyuth.handlers;
 
-import org.achyuth.exceptions.CommitLogAppendFailedException;
 import org.achyuth.exceptions.KeyNotFoundException;
 import org.achyuth.filesystem.CommitLogHandler;
 import org.achyuth.filesystem.StoredDataHandler;
@@ -30,10 +29,8 @@ public class RequestHandlerImpl implements RequestHandler {
 
     @Override
     public void set(String key, String value) throws Exception {
-        boolean appendSuccessful = commitLogHandler.append(key, value);
-        if (appendSuccessful) {
-            inMemoryCollection.set(key, value, storedDataHandler);
-        } else throw new CommitLogAppendFailedException("Unable to append to commit log.");
+        commitLogHandler.append(key, value);
+        inMemoryCollection.set(key, value, storedDataHandler);
     }
 
     @Override

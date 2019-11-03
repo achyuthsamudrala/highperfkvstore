@@ -13,14 +13,21 @@ public class LocalFileSystemUtils implements FsUtils {
     }
 
     @Override
-    public  void append(String fileName, String data) throws IOException {
+    public void append(String fileName, String data) throws IOException {
         try (FileWriter fw = new FileWriter(fileName, true)) {
             fw.append(data);
         }
 	}
 
     @Override
-    public void write(String fileName, String data) throws Exception {
+    public void append(String fileName, byte[] data) throws Exception {
+        try (FileOutputStream output = new FileOutputStream(fileName, true)) {
+            output.write(data);
+        }
+    }
+
+    @Override
+    public void write(String fileName, byte[] data) throws Exception {
 
     }
 

@@ -26,11 +26,11 @@ public class MemoryCollection {
 
     public void set(String key, String value, StoredDataHandler storedDataHandler) {
         currentActiveBatch.put(key, value);
-         if (isFull()) {
+        if (isFull()) {
             Map<String, String> cloneOfActiveCollection = shallowCopy();
             clear();
             storedDataHandler.persist(cloneOfActiveCollection);
-         }
+        }
     }
 
     private boolean isFull() {

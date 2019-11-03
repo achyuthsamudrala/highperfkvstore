@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Assertions;
 
 import java.nio.ByteBuffer;
 
-public class BatchingRequestHandlerTest {
+public class RequestHandlerImplTest {
 
     @Test
     public void testSingleSetAndGet() throws Exception {
         MemoryCollection ssCollection = new MemoryCollection(10000);
-        RequestHandlerImpl batchingRequestHandler = new RequestHandlerImpl(ssCollection,
+        RequestHandlerImpl requestHandler = new RequestHandlerImpl(ssCollection,
                                                     new MockCommitLogHandlerImpl(), new StoredDataHandlerImpl(null));
 
         String expectedKey = "somekey";
@@ -25,9 +25,9 @@ public class BatchingRequestHandlerTest {
         byte[] value = toByteArray(expectedValue);
         String hexRepValue = Hex.encodeHexString(value);
 
-        batchingRequestHandler.set(hexRepKey, hexRepValue);
+        requestHandler.set(hexRepKey, hexRepValue);
 
-        String valueReceived = batchingRequestHandler.get(hexRepKey);
+        String valueReceived = requestHandler.get(hexRepKey);
         Assertions.assertEquals(hexRepValue, valueReceived);
 
     }

@@ -1,5 +1,5 @@
 package org.achyuth.filesystem;
 
 public interface CommitLogHandler {
-    boolean append(String key, String value);
+    void append(String key, String value) throws Exception;
 }

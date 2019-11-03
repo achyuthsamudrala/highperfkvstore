@@ -8,7 +8,6 @@ import org.achyuth.memory.MemoryCollection;
 
 import org.apache.log4j.Logger;
 
-
 import java.io.*;
 import java.net.ServerSocket;
 
@@ -20,15 +19,14 @@ public class Server {
     private static final int BATCH_SIZE = 10000;
 
     private ServerSocket serverSocket;
-    private final MemoryCollection ssCollection;
+    private final MemoryCollection memoryCollection;
     private final RequestHandler requestHandler;
 
     Server() {
-        ssCollection = new MemoryCollection(BATCH_SIZE);
-         ;
+        memoryCollection = new MemoryCollection(BATCH_SIZE);
         CommitLogHandler commitLogHandler = new CommitLogHandlerImpl(FsUtilsFactory.getWriter("local"));
         StoredDataHandler storedDataHandler = new StoredDataHandlerImpl(FsUtilsFactory.getWriter("local"));
-        requestHandler = new RequestHandlerImpl(ssCollection, commitLogHandler, storedDataHandler);
+        requestHandler = new RequestHandlerImpl(memoryCollection, commitLogHandler, storedDataHandler);
     }
 
     void start() throws IOException {
